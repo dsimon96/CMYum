@@ -11,7 +11,7 @@ class User(models.Model):
 
 	#Represents User as a string when it is called
 	def __str__(self):
-		return "%s, %s, %s" % (self.firstName, self.lastName, self.username)
+		return self.firstName
 
 	#Orders the Users in the database by first name
 	class Meta:
