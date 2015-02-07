@@ -1,30 +1,56 @@
-<h1>Create an Account</h1>
-<!--Request sent to addUser-->
-<form action = "{% url 'app:addUser' %}" method="post">
-<div class="form-group">
-{% csrf_token %}
-	<div class="col-md-8">
-		<label for="firstNameInput">First Name</label>
-		<input type="text" name = "First_Name" class="form-control" id="firstNameInput">
-		<br>
-		<label for="lastNameInput">Last Name</label>
-		<input type="text" name = "Last_Name" class="form-control" id="lastNameInput">
-		<br>
-		<label for="usernameInput">Username</label>
-		<input type="text" name = "username" class="form-control" id="usernameInput">
-		{% if error == True %}
-			That username already exists.
-			<br>
-		{% endif %}
-		<br>
-		<label for="passwordInput">Password</label>
-		<input type="password" name = "password" class="form-control" id="passwordInput">
-		{% if blankErrorStatus == True %}
-			Please fill out all the fields.
-			<br>
-		{% endif %}
-		<br>
-		<button type="submit" class="btn btn-primary btn-md">Create Account</button></a>
-	</div>
-</div>
-</form>
+<!DOCTYPE html>
+<html>
+	<head>
+	  	{% load staticfiles %}
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    <link rel="icon" href="">
+	    <!--"Normalizes" the styling across browsers"-->
+	    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css">
+	    <!--jQuery file -->
+	    <script src="{% static 'app/dist/js/jquery-1.11.1.min.js' %}"></script>
+	    <!--Bootstrap core JS -->
+	    <script src="{% static 'app/dist/js/bootstrap.min.js' %}"></script>
+	    <!-- Bootstrap core CSS -->
+	    <link href="{% static 'app/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	    <!--Custom styles-->
+		<link rel="stylesheet" type="text/css" href="">
+		<title>CMYum</title>
+	</head>
+
+	<body>
+		<h1>Create an Account</h1>
+		<!--Request sent to addUser-->
+		<form action = "{% url 'app:addUser' %}" method="post">
+		<div class="form-group">
+		{% csrf_token %}
+			<div class="col-sm-3">
+				<label for="firstNameInput">First Name</label>
+				<input type="text" name = "First_Name" class="form-control" id="firstNameInput">
+				<br>
+				<label for="lastNameInput">Last Name</label>
+				<input type="text" name = "Last_Name" class="form-control" id="lastNameInput">
+				<br>
+				<label for="usernameInput">Username</label>
+				<input type="text" name = "username" class="form-control" id="usernameInput">
+				{% if error == True %}
+					That username already exists.
+					<br>
+				{% endif %}
+				<br>
+				<label for="passwordInput">Password</label>
+				<input type="password" name = "password" class="form-control" id="passwordInput">
+				{% if blankErrorStatus == True %}
+					Please fill out all the fields.
+					<br>
+				{% endif %}
+				<br>
+				<button type="submit" class="btn btn-primary btn-md">Create Account</button></a>
+			</div>
+		</div>
+		</form>
+	</body>
+</html>

@@ -67,23 +67,18 @@ def addOrder(request):
 	time = timezone.now()
 	user_location = request.POST['Location']
 	#createAccount page
-	try:
-		User.objects.get(username = username)
-		context = {'error': True, 'blankErrorStatus': False}
-		return render(request, 'app/createOrder.html', context)
-	except:
-		#If one or more fields are blank, raises an error
-		if (username == "" or restaurant == "" or food == "" or user_location == ""):
-			blankErrorStatus = True
-			###Probably not the best idea to redirect here, use render with context instead
-			return HttpResponseRedirect(reverse('app:createOrder', args=(blankErrorStatus,)))
-		else:
-			#If the username does not exist and all fields are filled, creates a
-			#new User instance
-			newOrder = Order(user = username, restaurant = restaurant, food = food, time = time,
-							 user_location = user_location)
-			newOrder.save()
-			return HttpResponseRedirect(reverse('app:index'))
+	#If one or more fields are blank, raises an error
+	if (username == "" or restaurant == "" or food == "" or user_location == ""):
+		blankErrorStatus = True
+		###Probably not the best idea to redirect here, use render with context instead
+		return HttpResponseRedirect(reverse('app:createOrder', args=(blankErrorStatus,)))
+	else:
+		#If the username does not exist and all fields are filled, creates a
+		#new User instance
+		newOrder = Order(user = username, restaurant = restaurant, food = food, time = time,
+						 user_location = user_location)
+		newOrder.save()
+		return HttpResponseRedirect(reverse('app:index'))
 
 #Log In page with form
 def logInPage(request):
