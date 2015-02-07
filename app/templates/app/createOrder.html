@@ -1,0 +1,27 @@
+<h1>Place an Order</h1>
+<!--Request sent to addOrder-->
+<form action = "{% url 'app:addOrder' %}" method="post">
+<div class="form-group">
+{% csrf_token %}
+	<div class="col-md-8">
+		<!--Fix this to automatically get username-->
+		<label for="usernameInput">Username</label>
+		<input type="text" name = "Username" class="form-control" id="usernameInput">
+		<br>
+		<label for="restaurantInput">Restaurant Name</label>
+		<input type="text" name = "Restaurant" class="form-control" id="restaurantInput">
+		<br>
+		<label for="foodInput">Food</label>
+		<input type="text" name = "Food" class="form-control" id="foodInput">
+		<br>
+		<label for="userLocation">Location</label>
+		<input type="text" name = "Location" class="form-control" id="userLocation">
+		{% if blankErrorStatus == True %}
+			Please fill out all the fields.
+			<br>
+		{% endif %}
+		<br>
+		<button type="submit" class="btn btn-primary btn-md">Place Order </button></a>
+	</div>
+</div>
+</form>
