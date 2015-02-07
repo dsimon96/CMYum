@@ -67,10 +67,7 @@ def sendMessage(request, order_id):
 		client = order.user
 		sendRunnerMessage(runner, client, order)
 		sendClientMessage(runner, client, order)
-
-	else:
-		context = {'error': False, 'blankErrorStatus': False}
-		return render(request, 'app/createAccount.html', context)
+	return render(request, 'app/index.html')
 
 def removePunctuation(s):
 	result = ''
