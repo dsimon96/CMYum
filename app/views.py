@@ -12,7 +12,7 @@ def createAccount(request, blankErrorStatus):
 		context = {'error': False, 'blankErrorStatus': True}
 	else:
 		context = {'error': False, 'blankErrorStatus': False}
-	return render(request, 'hubs/createAccount.html', context)
+	return render(request, 'app/createAccount.html', context)
 
 #Adds a user account to the database
 def addUser(request):
@@ -27,25 +27,25 @@ def addUser(request):
 	try:
 		User.objects.get(username_text = username)
 		context = {'error': True, 'blankErrorStatus': False}
-		return render(request, 'hubs/createAccount.html', context)
+		return render(request, 'app/createAccount.html', context)
 	except:
 		#If one or more fields are blank, raises an error
 		if (firstName == "" or lastName == "" or username == "" or password == ""):
 			blankErrorStatus = True
 			###Probably not the best idea to redirect here, use render with context instead
-			return HttpResponseRedirect(reverse('hubs:createAccount', args=(blankErrorStatus,)))
+			return HttpResponseRedirect(reverse('app:createAccount', args=(blankErrorStatus,)))
 		else:
 			#If the username does not exist and all fields are filled, creates a
 			#new User instance
 			newUser = User(firstName_text = firstName, lastName_text = lastName,
 				username_text = username, hashedPassword_text = encryptedPassword)
 			newUser.save()
-			return HttpResponseRedirect(reverse('hubs:index'))
+			return HttpResponseRedirect(reverse('app:index'))
 
 #Log In page with form
 def logInPage(request):
 	context = {'error': False}
-	return render(request, 'hubs/logInPage.html', context)
+	return render(request, 'app/logInPage.html', context)
 
 #Verifies that the username and password entered are in the database
 def logInAuthenticate(request):
@@ -58,20 +58,20 @@ def logInAuthenticate(request):
 		currentUser = User.objects.get(username_text = username)
 		if (encryptedPassword == currentUser.hashedPassword_text):
 			request.session['user_id'] = currentUser.id
-			return HttpResponseRedirect(reverse('hubs:userProfile'))
+			return HttpResponseRedirect(reverse('app:userProfile'))
 		#If username is in database but password is incorrect, raises an error
 		#in the logInPage
 		else:
 			context = {'error': True, 'username': username}
-			return render(request, 'hubs/logInPage.html', context) 
+			return render(request, 'app/logInPage.html', context) 
 	except:
 		#If username is not in database, raises an error in the
 		##logInPage
 		context = {'error': True}
-		return render(request, 'hubs/logInPage.html', context) 
+		return render(request, 'app/logInPage.html', context) 
 
 #Allows users to log out of their session
 def logout(request):
 	#Deketes the cookie storing user info
 	del request.session['user_id']
-	return HttpResponseRedirect(reverse('hubs:index'))
+	return HttpResponseRedirect(reverse('app:index'))
