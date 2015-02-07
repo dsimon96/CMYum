@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.logout, name = 'logout'),
 
     url(r'^orders/$', views.viewOrders, name = "viewOrders"),
+    url(r'^(?P<id>\w+)/claimOrder/$', views.claimOrder, name = "claimOrder"),
 )

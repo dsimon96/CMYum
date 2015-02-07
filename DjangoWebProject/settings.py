@@ -89,3 +89,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     ('', SITE_STATIC_ROOT)
 )
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'cmyumorders'
+EMAIL_HOST_PASSWORD = 'yummyfood'
+DEFAULT_FROM_EMAIL = 'cmyumorders'

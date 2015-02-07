@@ -4,13 +4,7 @@ import hashlib
 from app.models import *
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from twilio.rest import TwilioRestClient
-
-acc_sid = "ACc80ca9e0300eca6696d3ef736b07bfa6"
-auth_token = "add2bd12a41a84bb45fbcfa271464ae5"
-client = TwilioRestClient(acc_sid, auth_token)
-sms_number = "2673092588"
-
+from django.core.mail import send_mail
 
 def index(request):
 	if ('user_id' in request.session):
@@ -41,38 +35,20 @@ def createAccount(request, blankErrorStatus):
 
 def sendRunnerMessage(runner, client, order):
 	clientName = client.firstName
-	runnerNumber = runner.phoneNumber
 	clientNumber = client.phoneNumber
+	runnerEmail = runner.email
 	food = order.food
 	restaurant = order.restaurant
 	location = order.user_location
-	body = "You are getting %s from %s, for delivery to %s at %s. You can reach them at %s" % (food, restaurant, clientName, location, clientNumber)
-	message = client.messages.create(
-		body=body,
-		to=runnerNumber,
-		from_=sms_number,
-	)
+	body = "You are getting %s from %s for delivery to %s at %s. You can reach them at %s" % (food, restaurant, clientName, location, clientNumber)
+	send_mail("CMYum Order", body, 'cmyumorders@gmail.com', [runnerEmail], fail_silently=False)
 
 def sendClientMessage(runner, client, order):
 	runnerName = runner.firstName
 	runnerNumber = runner.phoneNumber
-	clientNumber = client.phoneNumber
-	body = "%s is getting your order! You can reach them at %d" % (runnerName, runnerNumber)
-	message = client.messages.create(
-		body=body,
-		to=clientNumber,
-		from_=sms_number,
-	)
-
-# Send text notifications
-def sendMessage(request, order_id):
-	if ('user_id' in request.session):
-		runner = User.objects.get(id = request.session['user_id'])
-		order = Order.objects.get(id = order_id)
-		client = order.user
-		sendRunnerMessage(runner, client, order)
-		sendClientMessage(runner, client, order)
-	return render(request, 'app/index.html')
+	clientEmail = client.email
+	body = "%s is getting your order! You can reach them at %s" % (runnerName, runnerNumber)
+	send_mail("CMYum Order", body, 'cmyumorders@gmail.com', [clientEmail], fail_silently=False)
 
 def removePunctuation(s):
 	result = ''
@@ -182,6 +158,16 @@ def logInAuthenticate(request):
 		##logInPage
 		context = {'error': True}
 		return render(request, 'app/logInPage.html', context) 
+
+def claimOrder(request, id):
+	currentOrder = Order.objects.get(id=id)
+	runner = User.objects.get(id = request.session['user_id'])
+	#currentOrder.runner = runner.id
+	#currentOrder.save()
+	sendRunnerMessage(User.objects.get(id = request.session['user_id']), currentOrder.user, currentOrder)
+	sendClientMessage(User.objects.get(id = request.session['user_id']), currentOrder.user, currentOrder)
+	currentOrder.delete()
+	return HttpResponseRedirect(reverse('app:viewOrders'))
 
 #Allows users to log out of their session
 def logout(request):
