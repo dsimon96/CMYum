@@ -82,7 +82,7 @@ def addUser(request):
 	lastName = request.POST['Last_Name']
 	username = request.POST['username']
 	phoneNumber = request.POST['phoneNumber']
-	emailAddress = request.POST['emailAddress']
+	emailAddress = request.POST['email']
 	password = request.POST['password']
 
 	phoneNumber = removePunctuation(phoneNumber)
