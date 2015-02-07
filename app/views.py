@@ -39,7 +39,10 @@ def addUser(request):
 	firstName = request.POST['First_Name']
 	lastName = request.POST['Last_Name']
 	username = request.POST['username']
+	phoneNumber = request.POST['phoneNumber']
+	emailAddress = request.POST['emailAddress']
 	password = request.POST['password']
+
 	#Password is encrypted by hashing
 	encryptedPassword = hashlib.sha1(password).hexdigest()
 	#If username already exists in database, then raises an error in the
@@ -50,7 +53,8 @@ def addUser(request):
 		return render(request, 'app/createAccount.html', context)
 	except:
 		#If one or more fields are blank, raises an error
-		if (firstName == "" or lastName == "" or username == "" or password == ""):
+		if (firstName == "" or lastName == "" or username == "" or password == ""
+			or phoneNumber == "" or emailAddress == ""):
 			blankErrorStatus = True
 			###Probably not the best idea to redirect here, use render with context instead
 			return HttpResponseRedirect(reverse('app:createAccount', args=(blankErrorStatus,)))
@@ -58,7 +62,8 @@ def addUser(request):
 			#If the username does not exist and all fields are filled, creates a
 			#new User instance
 			newUser = User(firstName = firstName, lastName = lastName,
-				username = username, hashedPassword = encryptedPassword)
+				username = username, hashedPassword = encryptedPassword, phoneNumber = phoneNumber,
+				email = emailAddress)
 			newUser.save()
 			return HttpResponseRedirect(reverse('app:index'))
 
