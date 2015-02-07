@@ -10,7 +10,6 @@
     {% load staticfiles%}
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
 
-</html>
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -19,9 +18,19 @@
   </head>
   <body>
     <h1>Woooo!</h1>
+    {% if currentUser %}
+      Hi {{currentUser.firstName}}
+    {% endif %}
     <a href = "{% url 'app:createAccount' blankErrorStatus=False %}">Create Account</a>
     <a href = "{% url 'app:createOrder' blankErrorStatus=False %}">Place an Order</a>
-</html>
+
+    {% if currentUser = null %}
+      <a href = "{% url 'app:logInPage' %}">Log In</a>
+    {% endif %}
+
+    {% if currentUser %}
+      <a href = "{% url 'app:logout' %}">Log Out</a>
+    {% endif %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

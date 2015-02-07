@@ -7,7 +7,12 @@ from django.utils import timezone
 
 
 def index(request):
-	return render(request, 'app/index.html')
+	if ('user_id' in request.session):
+		currentUser = User.objects.get(id = request.session['user_id'])
+		context = {'currentUser': currentUser}
+		return render(request, 'app/index.html', context)
+	else:
+		return render(request, 'app/index.html')
 
 #Create account page with form
 def createAccount(request, blankErrorStatus):
@@ -50,33 +55,35 @@ def addUser(request):
 # Creates order page with form
 def createOrder(request, blankErrorStatus):
 	#Determines the error based on the URL string
+	user = User.objects.get(id = request.session['user_id'])
 	if blankErrorStatus == "True":
-		context = {'error': False, 'blankErrorStatus': True}
+		context = {'user': user, 'error': False, 'blankErrorStatus': True}
 	else:
-		context = {'error': False, 'blankErrorStatus': False}
+		context = {'user': user, 'error': False, 'blankErrorStatus': False}
 	return render(request, 'app/createOrder.html', context)
 
 #Adds an order to the database
 def addOrder(request):
 	# Figure out how to get username (username not in form)
 	# For now, enter username manually
-	username = request.POST['Username']
+	user = User.objects.get(id = request.session['user_id'])
 	restaurant = request.POST['Restaurant']
 	food = request.POST['Food']
 	# Gets time from django.utils timezone
 	time = timezone.now()
 	user_location = request.POST['Location']
+	runner = -1
 	#createAccount page
 	#If one or more fields are blank, raises an error
-	if (username == "" or restaurant == "" or food == "" or user_location == ""):
+	if (restaurant == "" or food == "" or user_location == ""):
 		blankErrorStatus = True
 		###Probably not the best idea to redirect here, use render with context instead
 		return HttpResponseRedirect(reverse('app:createOrder', args=(blankErrorStatus,)))
 	else:
 		#If the username does not exist and all fields are filled, creates a
 		#new User instance
-		newOrder = Order(user = username, restaurant = restaurant, food = food, time = time,
-						 user_location = user_location)
+		newOrder = Order(user = user, restaurant = restaurant, food = food, time = time,
+						 user_location = user_location, runner = runner)
 		newOrder.save()
 		return HttpResponseRedirect(reverse('app:index'))
 
@@ -93,10 +100,10 @@ def logInAuthenticate(request):
 	try:
 		#If username is in database and matches with password, go to
 		#userProfile page
-		currentUser = User.objects.get(username_text = username)
-		if (encryptedPassword == currentUser.hashedPassword_text):
+		currentUser = User.objects.get(username = username)
+		if (encryptedPassword == currentUser.hashedPassword):
 			request.session['user_id'] = currentUser.id
-			return HttpResponseRedirect(reverse('app:userProfile'))
+			return HttpResponseRedirect(reverse('app:index'))
 		#If username is in database but password is incorrect, raises an error
 		#in the logInPage
 		else:

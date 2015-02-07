@@ -28,7 +28,7 @@ class Order(models.Model):
 
 	# Represents order as a string
 	def __str__(self):
-		return "return %s from %s to %s at %s" % (self.food, self.restaurant, self.user, self.user_location)
+		return "%s from %s to %s at %s" % (self.food, self.restaurant, self.user, self.user_location)
 
 	#Orders the Users in the database by first name
 	class Meta:

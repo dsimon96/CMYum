@@ -1,0 +1,24 @@
+<h1>Log In</h1>
+<!--Request sent to logInAuthenticate-->
+<form action = "{% url 'app:logInAuthenticate' %}" method = "post">
+	{% csrf_token %}
+	<div class="col-md-10">
+		<div class="form-group">
+			<label for="usernameInput">Username</label>
+			{% if username %}
+				<input type="text" name = "username" class="form-control" id="usernameInput" value="{{username}}">
+			{% else %}
+				<input type="text" name = "username" placeholder="Username" class="form-control" id="usernameInput">
+			{% endif %}
+			<br>
+			<label for="passwordInput">Password</label>
+			<input type="password" name = "password" placeholder="Password" class="form-control" id="passwordInput">
+			<br>
+			{% if error == True %}
+				Invalid username or password. Please try again.
+				<br><br>
+			{% endif %}
+			<button type="submit" class="btn btn-primary btn-md">Log In</button></a>
+		</div>
+	</div>
+</form>

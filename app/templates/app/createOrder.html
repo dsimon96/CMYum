@@ -1,13 +1,11 @@
 <h1>Place an Order</h1>
+<h2>Hi {{user.firstName}}</h2>
 <!--Request sent to addOrder-->
 <form action = "{% url 'app:addOrder' %}" method="post">
 <div class="form-group">
 {% csrf_token %}
 	<div class="col-md-8">
 		<!--Fix this to automatically get username-->
-		<label for="usernameInput">Username</label>
-		<input type="text" name = "Username" class="form-control" id="usernameInput">
-		<br>
 		<label for="restaurantInput">Restaurant Name</label>
 		<input type="text" name = "Restaurant" class="form-control" id="restaurantInput">
 		<br>
