@@ -23,11 +23,16 @@
     {% endif %}
     <a href = "{% url 'app:createAccount' blankErrorStatus=False %}">Create Account</a>
     <a href = "{% url 'app:createOrder' blankErrorStatus=False %}">Place an Order</a>
-    <a href = "{% url 'app:viewOrders' %}">View Orders</a>
 
     {% if currentUser = null %}
       <a href = "{% url 'app:logInPage' %}">Log In</a>
     {% endif %}
+
+    <ul>
+    {% for order in orderList %}
+    <li>{{ order }}</li>
+    {% endfor %}
+    </ul>
 
     {% if currentUser %}
       <a href = "{% url 'app:logout' %}">Log Out</a>

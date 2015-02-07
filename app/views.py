@@ -14,6 +14,17 @@ def index(request):
 	else:
 		return render(request, 'app/index.html')
 
+# View orders page
+def viewOrders(request):
+	if ('user_id' in request.session):
+		currentUser = User.objects.get(id = request.session['user_id'])
+		orderList = Order.objects.all()
+		context = {'currentUser': currentUser, 'orderList': orderList}
+		return render(request, 'app/orders.html', context)
+	else:
+		context = {'error': False, 'blankErrorStatus': False}
+		return render(request, 'app/createAccount.html', context)
+
 #Create account page with form
 def createAccount(request, blankErrorStatus):
 	#Determines the error based on the URL string
@@ -55,12 +66,16 @@ def addUser(request):
 # Creates order page with form
 def createOrder(request, blankErrorStatus):
 	#Determines the error based on the URL string
-	user = User.objects.get(id = request.session['user_id'])
-	if blankErrorStatus == "True":
-		context = {'user': user, 'error': False, 'blankErrorStatus': True}
+	if 'user_id' in request.session:
+		user = User.objects.get(id = request.session['user_id'])
+		if blankErrorStatus == "True":
+			context = {'user': user, 'error': False, 'blankErrorStatus': True}
+		else:
+			context = {'user': user, 'error': False, 'blankErrorStatus': False}
+		return render(request, 'app/createOrder.html', context)
 	else:
-		context = {'user': user, 'error': False, 'blankErrorStatus': False}
-	return render(request, 'app/createOrder.html', context)
+		context = {'error': False, 'blankErrorStatus': False}
+		return render(request, 'app/createAccount.html', context)
 
 #Adds an order to the database
 def addOrder(request):
