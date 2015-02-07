@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+import hashlib
+from app.models import *
+from django.core.urlresolvers import reverse
 
 
 def index(request):
@@ -25,7 +28,7 @@ def addUser(request):
 	#If username already exists in database, then raises an error in the
 	#createAccount page
 	try:
-		User.objects.get(username_text = username)
+		User.objects.get(username = username)
 		context = {'error': True, 'blankErrorStatus': False}
 		return render(request, 'app/createAccount.html', context)
 	except:
@@ -37,8 +40,8 @@ def addUser(request):
 		else:
 			#If the username does not exist and all fields are filled, creates a
 			#new User instance
-			newUser = User(firstName_text = firstName, lastName_text = lastName,
-				username_text = username, hashedPassword_text = encryptedPassword)
+			newUser = User(firstName = firstName, lastName = lastName,
+				username = username, hashedPassword = encryptedPassword)
 			newUser.save()
 			return HttpResponseRedirect(reverse('app:index'))
 

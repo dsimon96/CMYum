@@ -5,9 +5,8 @@ from app import views
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'DjangoWebProject.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    #url(r'^app/', include('app.urls')),
 
+    url(r'', include('app.urls', namespace = "app")),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index, name = "index"),
-    url(r'^(?P<blankErrorStatus>\w+)/createAccount/$', views.createAccount, name = 'createAccount'),
 )

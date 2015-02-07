@@ -1,6 +1,6 @@
 <h1>Create an Account</h1>
 <!--Request sent to addUser-->
-<form action = "{% url 'hubs:addUser' %}" method="post">
+<form action = "{% url 'app:addUser' %}" method="post">
 <div class="form-group">
 {% csrf_token %}
 	<div class="col-md-8">
