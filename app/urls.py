@@ -11,5 +11,5 @@ urlpatterns = patterns('',
 
     url(r'^logInPage/$', views.logInPage, name = 'logInPage'),
     url(r'^logInAuthenticate/$', views.logInAuthenticate, name = "logInAuthenticate"),
-    url(r'^/logout/$', views.logout, name = 'logout'),
+    url(r'^logout/$', views.logout, name = 'logout'),
 )
