@@ -4,6 +4,12 @@ import hashlib
 from app.models import *
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from twilio.rest import TwilioRestClient
+
+acc_sid = "ACc80ca9e0300eca6696d3ef736b07bfa6"
+auth_token = "add2bd12a41a84bb45fbcfa271464ae5"
+client = TwilioRestClient(acc_sid, auth_token)
+sms_number = "2673092588"
 
 
 def index(request):
@@ -47,7 +53,7 @@ def sendRunnerMessage(runner, client, order):
 		from_=sms_number,
 	)
 
-def sendClientMssage(runner, client, order):
+def sendClientMessage(runner, client, order):
 	runnerName = runner.firstName
 	runnerNumber = runner.phoneNumber
 	clientNumber = client.phoneNumber
