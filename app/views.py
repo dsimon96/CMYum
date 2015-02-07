@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 import hashlib
 from app.models import *
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 
 def index(request):
@@ -43,6 +44,45 @@ def addUser(request):
 			newUser = User(firstName = firstName, lastName = lastName,
 				username = username, hashedPassword = encryptedPassword)
 			newUser.save()
+			return HttpResponseRedirect(reverse('app:index'))
+
+
+# Creates order page with form
+def createOrder(request, blankErrorStatus):
+	#Determines the error based on the URL string
+	if blankErrorStatus == "True":
+		context = {'error': False, 'blankErrorStatus': True}
+	else:
+		context = {'error': False, 'blankErrorStatus': False}
+	return render(request, 'app/createOrder.html', context)
+
+#Adds an order to the database
+def addOrder(request):
+	# Figure out how to get username (username not in form)
+	# For now, enter username manually
+	username = request.POST['Username']
+	restaurant = request.POST['Restaurant']
+	food = request.POST['Food']
+	# Gets time from django.utils timezone
+	time = timezone.now()
+	user_location = request.POST['Location']
+	#createAccount page
+	try:
+		User.objects.get(username = username)
+		context = {'error': True, 'blankErrorStatus': False}
+		return render(request, 'app/createOrder.html', context)
+	except:
+		#If one or more fields are blank, raises an error
+		if (username == "" or restaurant == "" or food == "" or user_location == ""):
+			blankErrorStatus = True
+			###Probably not the best idea to redirect here, use render with context instead
+			return HttpResponseRedirect(reverse('app:createOrder', args=(blankErrorStatus,)))
+		else:
+			#If the username does not exist and all fields are filled, creates a
+			#new User instance
+			newOrder = Order(user = username, restaurant = restaurant, food = food, time = time,
+							 user_location = user_location)
+			newOrder.save()
 			return HttpResponseRedirect(reverse('app:index'))
 
 #Log In page with form

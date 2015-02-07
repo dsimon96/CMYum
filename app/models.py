@@ -25,7 +25,13 @@ class Order(models.Model):
 	time = models.DateTimeField('time placed')
 	user_location = models.CharField(max_length = 50)
 	runner = models.IntegerField()
-	
 
+	# Represents order as a string
+	def __str__(self):
+		return "return "%s from %s to %s at %s" % (self.food, self.restaurant, self.user, self.user_location)"
+
+	#Orders the Users in the database by first name
+	class Meta:
+		ordering = ('time',)
 
 
