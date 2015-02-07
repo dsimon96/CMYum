@@ -22,8 +22,7 @@ def viewOrders(request):
 		context = {'currentUser': currentUser, 'orderList': orderList}
 		return render(request, 'app/orders.html', context)
 	else:
-		context = {'error': False, 'blankErrorStatus': False}
-		return render(request, 'app/createAccount.html', context)
+		return render(request, 'app/logInPage.html')
 
 #Create account page with form
 def createAccount(request, blankErrorStatus):
@@ -123,8 +122,7 @@ def createOrder(request, blankErrorStatus):
 			context = {'user': user, 'error': False, 'blankErrorStatus': False}
 		return render(request, 'app/createOrder.html', context)
 	else:
-		context = {'error': False, 'blankErrorStatus': False}
-		return render(request, 'app/createAccount.html', context)
+		return render(request, 'app/logInPage.html')
 
 #Adds an order to the database
 def addOrder(request):
