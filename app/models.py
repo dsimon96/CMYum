@@ -11,9 +11,21 @@ class User(models.Model):
 
 	#Represents User as a string when it is called
 	def __str__(self):
-		return "%s, %s, %s" % (self.firstName_text, self.lastName_text, self.username_text)
+		return "%s, %s, %s" % (self.firstName, self.lastName, self.username)
 
 	#Orders the Users in the database by first name
 	class Meta:
-		ordering = ('firstName_text',)
+		ordering = ('firstName',)
+
+# Order model for placed orders
+class Order(models.Model):
+	user = models.ForeignKey(User)
+	restaurant = models.CharField(max_length = 50)
+	food = models.CharField(max_length = 50)
+	time = models.DateTimeField('time placed')
+	user_location = models.CharField(max_length = 50)
+	runner = models.IntegerField()
+	
+
+
 
