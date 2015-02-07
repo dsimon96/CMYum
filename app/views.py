@@ -34,6 +34,51 @@ def createAccount(request, blankErrorStatus):
 		context = {'error': False, 'blankErrorStatus': False}
 	return render(request, 'app/createAccount.html', context)
 
+def sendRunnerMessage(runner, client, order):
+	clientName = client.firstName
+	runnerNumber = runner.phoneNumber
+	clientNumber = client.phoneNumber
+	food = order.food
+	restaurant = order.restaurant
+	location = order.user_location
+	body = "You are getting %s from %s, for delivery to %s at %s. You can reach them at %s" % (food, restaurant, clientName, location, clientNumber)
+	message = client.messages.create(
+		body=body,
+		to=runnerNumber,
+		from_=sms_number,
+	)
+
+def sendClientMssage(runner, client, order):
+	runnerName = runner.firstName
+	runnerNumber = runner.phoneNumber
+	clientNumber = client.phoneNumber
+	body = "%s is getting your order! You can reach them at %d" % (runnerName, runnerNumber)
+	message = client.messages.create(
+		body=body,
+		to=clientNumber,
+		from_=sms_number,
+	)
+
+# Send text notifications
+def sendMessage(request, order_id):
+	if ('user_id' in request.session):
+		runner = User.objects.get(id = request.session['user_id'])
+		order = Order.objects.get(id = order_id)
+		client = order.user
+		sendRunnerMessage(runner, client, order)
+		sendClientMessage(runner, client, order)
+
+	else:
+		context = {'error': False, 'blankErrorStatus': False}
+		return render(request, 'app/createAccount.html', context)
+
+def removePunctuation(s):
+	result = ''
+	for i in xrange(len(s)):
+		if s[i] in '0123456789':
+			result.append(s[i])
+	return result
+
 #Adds a user account to the database
 def addUser(request):
 	firstName = request.POST['First_Name']
@@ -42,6 +87,8 @@ def addUser(request):
 	phoneNumber = request.POST['phoneNumber']
 	emailAddress = request.POST['emailAddress']
 	password = request.POST['password']
+
+	phoneNumber = removePunctuation(phoneNumber)
 
 	#Password is encrypted by hashing
 	encryptedPassword = hashlib.sha1(password).hexdigest()
