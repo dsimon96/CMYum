@@ -71,9 +71,9 @@ def sendMessage(request, order_id):
 
 def removePunctuation(s):
 	result = ''
-	for i in xrange(len(s)):
-		if s[i] in '0123456789':
-			result.append(s[i])
+	for char in s:
+		if char in '0123456789':
+			result += char
 	return result
 
 #Adds a user account to the database
