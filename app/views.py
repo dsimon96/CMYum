@@ -162,10 +162,8 @@ def logInAuthenticate(request):
 def claimOrder(request, id):
 	currentOrder = Order.objects.get(id=id)
 	runner = User.objects.get(id = request.session['user_id'])
-	#currentOrder.runner = runner.id
-	#currentOrder.save()
-	sendRunnerMessage(User.objects.get(id = request.session['user_id']), currentOrder.user, currentOrder)
-	sendClientMessage(User.objects.get(id = request.session['user_id']), currentOrder.user, currentOrder)
+	sendRunnerMessage(runner, currentOrder.user, currentOrder)
+	sendClientMessage(runner, currentOrder.user, currentOrder)
 	currentOrder.delete()
 	return HttpResponseRedirect(reverse('app:viewOrders'))
 
